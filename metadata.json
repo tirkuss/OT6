@@ -1,0 +1,5 @@
+{
+  "name": "OrthoTrackr",
+  "description": "Offline-only Android/PWA orthodontic records app focused on doctors, local IndexedDB storage, SHA-256 audit trails, Blob clinical photos, and rolling backups.",
+  "permissions": []
+}
