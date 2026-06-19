@@ -101,8 +101,8 @@ export class BackupService {
     const sharePkg = '@capacitor/share';
     const { Share } = await import(/* @vite-ignore */ sharePkg);
 
-    // More robust base64 encoding for potentially large JSON strings
-    const base64 = btoa(new TextEncoder().encode(content).reduce((data, byte) => data + String.fromCharCode(byte), ''));
+    const blob = new Blob([content], { type: mimeType });
+    const base64 = await blobToBase64(blob);
 
     const result = await Filesystem.writeFile({
       path: filename,
@@ -113,7 +113,7 @@ export class BackupService {
     await Share.share({
       title: filename,
       text: 'Exporting OrthoTrackr Backup',
-      url: result.uri,
+      files: [result.uri],
       dialogTitle: 'Save backup'
     });
   }

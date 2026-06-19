@@ -13,8 +13,9 @@ export function AdminPage({ doctorName }: { doctorName: string }) {
 
   async function exportBackup() {
     try {
-      const log = await BackupService.createManualBackup(doctorName);
-      await BackupService.downloadOrShare(`orthotrackr_backup_${Date.now()}.json`, 'application/json', log.backupData ?? '');
+      await BackupService.createManualBackup(doctorName);
+      const backupData = await BackupService.exportJson();
+      await BackupService.downloadOrShare(`orthotrackr_backup_${Date.now()}.json`, 'application/json', backupData);
       await queryClient.invalidateQueries({ queryKey: ['backups'] });
     } catch (e) {
       alert('Export failed: ' + (e instanceof Error ? e.message : String(e)));

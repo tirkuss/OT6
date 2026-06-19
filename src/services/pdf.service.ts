@@ -66,7 +66,7 @@ export async function saveBlob(filename: string, _mimeType: string, blob: Blob):
   await Share.share({
     title: filename,
     text: 'OrthoTrackr Patient PDF',
-    url: result.uri,
+    files: [result.uri],
     dialogTitle: 'Save PDF'
   });
 }
