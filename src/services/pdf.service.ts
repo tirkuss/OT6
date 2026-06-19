@@ -1,3 +1,5 @@
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import type { Patient } from '../types';
 
 export async function exportPatientPdf(patient: Patient, doctorName: string): Promise<Blob> {
@@ -52,11 +54,6 @@ export async function saveBlob(filename: string, _mimeType: string, blob: Blob):
     reader.readAsDataURL(blob);
   });
   
-  const fsPkg = '@capacitor/filesystem';
-  const { Filesystem, Directory } = await import(/* @vite-ignore */ fsPkg);
-  const sharePkg = '@capacitor/share';
-  const { Share } = await import(/* @vite-ignore */ sharePkg);
-
   const result = await Filesystem.writeFile({
     path: filename,
     data: base64,

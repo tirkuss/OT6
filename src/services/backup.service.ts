@@ -1,3 +1,5 @@
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 import { idbRequest, openDatabase, txDone } from '../db/connection';
 import { stores } from '../db/schema';
 import { BackupRepository } from '../repositories/backup.repository';
@@ -45,8 +47,7 @@ export class BackupService {
     return JSON.stringify(payload, null, 2);
   }
 
-  static async createManualBackup(user: string): Promise<BackupHistoryLog> {
-    const backupData = await this.exportJson();
+  static async createManualBackup(user: string, backupData: string): Promise<BackupHistoryLog> {
     const log = makeBackupLog('Manual JSON Backup', user, backupData);
     await BackupRepository.add(log);
     return log;
@@ -96,11 +97,6 @@ export class BackupService {
   }
 
   static async downloadOrShare(filename: string, mimeType: string, content: string): Promise<void> {
-    const fsPkg = '@capacitor/filesystem';
-    const { Filesystem, Directory } = await import(/* @vite-ignore */ fsPkg);
-    const sharePkg = '@capacitor/share';
-    const { Share } = await import(/* @vite-ignore */ sharePkg);
-
     const blob = new Blob([content], { type: mimeType });
     const base64 = await blobToBase64(blob);
 

@@ -11,8 +11,9 @@ declare module 'jspdf' {
 
 declare module '@capacitor/app' {
   export const App: {
-    addListener(event: 'backButton', callback: (data: { canGoBack: boolean }) => void): Promise<void>;
+    addListener(event: 'backButton', callback: (data: { canGoBack: boolean }) => void): Promise<{ remove: () => void }>;
     exitApp(): Promise<void>;
+    removeAllListeners(): Promise<void>;
   };
 }
 
@@ -23,7 +24,7 @@ declare module '@capacitor/status-bar' {
   };
 }
 
-declare module '@capgo/capacitor-navigationbar' {
+declare module '@capgo/capacitor-navigation-bar' {
   export const NavigationBar: {
     hide(): Promise<void>;
     show(): Promise<void>;
@@ -48,6 +49,6 @@ declare module '@capacitor/filesystem' {
 
 declare module '@capacitor/share' {
   export const Share: {
-    share(options: { title: string; text: string; url: string; dialogTitle: string }): Promise<void>;
+    share(options: { title: string; text: string; url?: string; files?: string[]; dialogTitle: string }): Promise<void>;
   };
 }

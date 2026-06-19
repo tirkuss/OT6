@@ -1,5 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { App as NativeApp } from '@capacitor/app';
+import { StatusBar } from '@capacitor/status-bar';
+import { NavigationBar } from '@capgo/capacitor-navigation-bar';
 import { AppShell } from './components/layout/AppShell';
 import { OnboardingPage } from './features/onboarding/OnboardingPage';
 import { DashboardPage } from './features/dashboard/DashboardPage';
@@ -18,13 +22,8 @@ export default function App() {
     // Android Native Enhancements
     const setupNative = async () => {
       try {
-        const corePkg = '@capacitor/core';
-        const { Capacitor } = await import(/* @vite-ignore */ corePkg);
         if (Capacitor.isNativePlatform()) {
           // 1. Back button exit confirmation
-          const appPkg = '@capacitor/app';
-          const { App: NativeApp } = await import(/* @vite-ignore */ appPkg);
-          
           // Remove existing listeners to avoid duplicates
           await NativeApp.removeAllListeners();
           
@@ -40,12 +39,8 @@ export default function App() {
           });
 
           // 2. Immersive mode (Hide Status Bar & Navigation Bar)
-          const sbPkg = '@capacitor/status-bar';
-          const { StatusBar } = await import(/* @vite-ignore */ sbPkg);
           await StatusBar.hide();
 
-          const nbPkg = '@capgo/capacitor-navigation-bar';
-          const { NavigationBar } = await import(/* @vite-ignore */ nbPkg);
           // @capgo/capacitor-navigation-bar v6 uses .hide() for immersive
           await NavigationBar.hide();
         }
