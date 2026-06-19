@@ -1,5 +1,6 @@
 import { Copy, DatabaseBackup, Download, Upload } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { Clipboard } from '@capacitor/clipboard';
 import { FormEvent, useState } from 'react';
 import { BackupRepository } from '../../repositories/backup.repository';
 import { BackupService } from '../../services/backup.service';
@@ -13,8 +14,8 @@ export function AdminPage({ doctorName }: { doctorName: string }) {
 
   async function exportBackup() {
     try {
-      await BackupService.createManualBackup(doctorName);
       const backupData = await BackupService.exportJson();
+      await BackupService.createManualBackup(doctorName, backupData);
       await BackupService.downloadOrShare(`orthotrackr_backup_${Date.now()}.json`, 'application/json', backupData);
       await queryClient.invalidateQueries({ queryKey: ['backups'] });
     } catch (e) {
@@ -25,8 +26,6 @@ export function AdminPage({ doctorName }: { doctorName: string }) {
   async function copyBackup() {
     try {
       const json = await BackupService.exportJson();
-      const clipPkg = '@capacitor/clipboard';
-      const { Clipboard } = await import(/* @vite-ignore */ clipPkg);
       await Clipboard.write({ string: json });
       alert('Backup JSON copied to clipboard!');
     } catch (e) {
